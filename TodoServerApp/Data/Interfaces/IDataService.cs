@@ -1,13 +1,13 @@
-﻿namespace TodoServerApp.Data.Interfaces
+﻿using System.Collections;
+
+namespace TodoServerApp.Data.Interfaces
 {
-	public interface IDataService
-	{
-		Task<IEnumerable<TaskItem>> GetAllAsync();
-		Task SaveAsync(TaskItem item);
-
-		Task<TaskItem> GetTaskAsync(int id);
-
-		Task DeletAsync(int id);
-
-	}
+    public interface IDataService
+    {
+        Task<IEnumerable<TaskItem>> GetAllAsync();
+        Task SaveAsync(TaskItem item);
+        Task<TaskItem> GetTaskAsync(int id);
+        Task DeleteAsync(int id);
+    }
 }
+
