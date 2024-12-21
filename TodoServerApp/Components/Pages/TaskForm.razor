@@ -12,19 +12,19 @@
         <h2>Новая задача</h2>
         <InputNumber @bind-Value="TaskItem.Id" hidden />
         <div class="form-group d-flex justify-content-between m-2">
-            <label class="col-form-label col-3">Заголовок</label>
-            <InputText @bind-Value="TaskItem.Title" Class="form-control" />
-            <ValidationMessage For="() => TaskItem.Title" />
+            <label class="col-form-label col-3">Какой товар хотите добавить?</label>
+            <InputText @bind-Value="TaskItem.Product" Class="form-control" />
+            <ValidationMessage For="() => TaskItem.Product" />
         </div>
         <div class="form-group d-flex justify-content-between m-2">
-            <label class="col-form-label col-3">Описание</label>
-            <InputText @bind-Value="TaskItem.Description" Class="form-control" />
-            <ValidationMessage For="() => TaskItem.Description" />
+            <label class="col-form-label col-3">Какая категория этого товара?</label>
+            <InputText @bind-Value="TaskItem.Category" Class="form-control" />
+            <ValidationMessage For="() => TaskItem.Category" />
         </div>
         <div class="form-group d-flex justify-content-between m-2">
-            <label class="col-form-label col-3">Дата окончания</label>
-            <InputDate @bind-Value="TaskItem.FinishDate" Class="form-control" />
-            <ValidationMessage For="() => TaskItem.FinishDate" />
+            <label class="col-form-label col-3">Укажите цену товара</label>
+            <InputText @bind-Value="TaskItem.Order" Class="form-control" />
+            <ValidationMessage For="() => TaskItem.Order" />
         </div>
         <div class="btn-group">
             <button class="btn btn-primary m-2" type="submit">Сохранить</button>
@@ -61,19 +61,15 @@
             if (Id != 0)
 
             {
-
                 var src = await data.GetTaskAsync(Id);
 
                 TaskItem.Id = src.Id;
 
-                TaskItem.Title = src.Title;
+                TaskItem.Product = src.Product;
 
-                TaskItem.Description = src.Description;
+                TaskItem.Category = src.Category;
 
-                TaskItem.CreatedDate = src.CreatedDate;
-
-                TaskItem.FinishDate = src.FinishDate;
-
+                TaskItem.Order = src.Order;
             }
 
         }
@@ -85,7 +81,6 @@
     async Task ValidSubmit()
 
     {
-
         await data.SaveAsync(TaskItem!);
 
         navigate.NavigateTo("/");

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoServerApp.Data;
 
@@ -11,9 +12,11 @@ using TodoServerApp.Data;
 namespace TodoServerApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241220191102_aa")]
+    partial class aa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,8 +235,11 @@ namespace TodoServerApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsAddedToCart")
-                        .HasColumnType("bit");
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FinishDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Order")
                         .HasColumnType("nvarchar(max)");
@@ -241,9 +247,6 @@ namespace TodoServerApp.Migrations
                     b.Property<string>("Product")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -254,37 +257,32 @@ namespace TodoServerApp.Migrations
                         {
                             Id = 1,
                             Category = "одежда",
-                            IsAddedToCart = false,
+                            CreatedDate = new DateTime(2024, 12, 21, 0, 11, 2, 321, DateTimeKind.Local).AddTicks(5253),
                             Order = "252 покупки",
-                            Product = "Футболка",
-                            Quantity = 0
+                            Product = "Футболка"
                         },
                         new
                         {
                             Id = 2,
                             Category = "одежда",
-                            IsAddedToCart = false,
+                            CreatedDate = new DateTime(2024, 12, 21, 0, 11, 2, 321, DateTimeKind.Local).AddTicks(5269),
                             Order = "1000 покупок",
-                            Product = "Джинсы",
-                            Quantity = 0
+                            Product = "Джинсы"
                         },
                         new
                         {
                             Id = 3,
                             Category = "верхняя одежда",
-                            IsAddedToCart = false,
+                            CreatedDate = new DateTime(2024, 12, 21, 0, 11, 2, 321, DateTimeKind.Local).AddTicks(5271),
                             Order = "2 покупки",
-                            Product = "Куртка",
-                            Quantity = 0
+                            Product = "Куртка"
                         },
                         new
                         {
                             Id = 4,
                             Category = "Описание задачи 4",
-                            IsAddedToCart = false,
-                            Order = "2 покупки",
-                            Product = "Задача 4",
-                            Quantity = 0
+                            CreatedDate = new DateTime(2024, 12, 21, 0, 11, 2, 321, DateTimeKind.Local).AddTicks(5273),
+                            Product = "Задача 4"
                         });
                 });
 

@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,10 @@ namespace TodoServerApp
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var builder = WebApplication.CreateBuilder(args); //Создается WebApplicationBuilder приложение с предварительно настроенными значениями по умолчанию:
 
             // Add services to the container.
-            builder.Services.AddRazorComponents()
+            builder.Services.AddRazorComponents() //отрисовки компонентов интерактивного сервера
                 .AddInteractiveServerComponents();
 
             builder.Services.AddCascadingAuthenticationState();
@@ -46,7 +47,7 @@ namespace TodoServerApp
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment()) //проверка типа
             {
                 app.UseMigrationsEndPoint();
             }
@@ -57,17 +58,16 @@ namespace TodoServerApp
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            app.UseHttpsRedirection(); //применяет протокол HTTPS, перенаправляя HTTP-запросы на HTTPS
 
             app.UseStaticFiles();
-            app.UseAntiforgery();
+            app.UseAntiforgery(); //защиту от подделки для обработки форм
 
-            app.MapRazorComponents<App>()
+            app.MapRazorComponents<App>() //настраивает поддержку интерактивной отрисовки на стороне сервера
                 .AddInteractiveServerRenderMode();
 
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();
-
             app.Run();
         }
     }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoServerApp.Data;
 
@@ -11,9 +12,11 @@ using TodoServerApp.Data;
 namespace TodoServerApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241220221604_dataa")]
+    partial class dataa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,9 +245,6 @@ namespace TodoServerApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("TaskItems");
@@ -256,8 +256,7 @@ namespace TodoServerApp.Migrations
                             Category = "одежда",
                             IsAddedToCart = false,
                             Order = "252 покупки",
-                            Product = "Футболка",
-                            Quantity = 0
+                            Product = "Футболка"
                         },
                         new
                         {
@@ -265,8 +264,7 @@ namespace TodoServerApp.Migrations
                             Category = "одежда",
                             IsAddedToCart = false,
                             Order = "1000 покупок",
-                            Product = "Джинсы",
-                            Quantity = 0
+                            Product = "Джинсы"
                         },
                         new
                         {
@@ -274,8 +272,7 @@ namespace TodoServerApp.Migrations
                             Category = "верхняя одежда",
                             IsAddedToCart = false,
                             Order = "2 покупки",
-                            Product = "Куртка",
-                            Quantity = 0
+                            Product = "Куртка"
                         },
                         new
                         {
@@ -283,8 +280,7 @@ namespace TodoServerApp.Migrations
                             Category = "Описание задачи 4",
                             IsAddedToCart = false,
                             Order = "2 покупки",
-                            Product = "Задача 4",
-                            Quantity = 0
+                            Product = "Задача 4"
                         });
                 });
 

@@ -1,10 +1,9 @@
-﻿@page "/"
+﻿@* @page "/"
 @rendermode InteractiveServer
 @inject IDataService data
-@* @attribute [Authorize] *@
 @inject NavigationManager navigate
 
-<PageTitle>Задачи</PageTitle>
+<PageTitle>Корзина товаров</PageTitle>
 <h1>Мои задачи</h1>
 
 <div class="container">
@@ -12,7 +11,7 @@
 
     {
         <tr>
-            <td colspan="5">
+            <td colspan="4">
                 Loading ...
             </td>
         </tr>
@@ -22,23 +21,392 @@
 
     {
         <div class="btn-group m-2">
-            <button class="btn btn-primary" @onclick="AddTask">Новая задача</button>
+            <button class="btn btn-primary" @onclick="AddTask">Добавить товар</button>
         </div>
         <div class="card-group">
             @foreach (var t in tasks)
 
             {
-                <div class="card">
+                <div class="card" style="background-color: @(t.IsAddedToCart ? "#d4edda" : "white");">
                     <div class="card-header">
-                        @t.Title
+                        @t.Id
                     </div>
                     <div class="card-body">
-                        <p>@t.Description</p>
-                        <p>@t.CreatedDate</p>
+                        <p>@t.Category</p>
+                        <p>@t.Order</p>
                     </div>
                     <div class="card-footer">
-                        <a class="btn btn-primary" href="tasks/@t.Id">Изменить</a>
-                        <button class="btn btn-primary" onclick="async () => await DeleteTask(task.Id)">Удалить</button>
+                        <a class="btn btn-primary" href="tasks/@t.Id">Обработать</a>
+                        <button class="btn btn-primary" @onclick="() => ToggleCartStatus(t)">
+                            @(t.IsAddedToCart ? "Убрать из корзины" : "Добавить в корзину")
+                        </button>
+                        <button class="btn btn-danger" @onclick="() => DeleteTask(t.Id)">Удалить</button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    IEnumerable<TaskItem>? tasks; // Список объектов класса TaskItem
+
+    protected override async Task OnInitializedAsync()
+
+    {
+
+        await base.OnInitializedAsync();
+
+        tasks = await data.GetAllAsync();
+
+    }
+
+    void AddTask()
+
+    {
+
+        navigate.NavigateTo("tasks/add");
+
+    }
+
+    async Task DeleteTask(int id)
+
+    {
+
+        await data.DeleteAsync(id);
+
+        tasks = await data.GetAllAsync();
+
+    }
+
+    void ToggleCartStatus(TaskItem task)
+
+    {
+
+        // Переключаем статус добавления в корзину
+
+        task.IsAddedToCart = !task.IsAddedToCart;
+
+        StateHasChanged(); // Обновляем интерфейс
+
+    }
+}
+ 
+
+@page "/"
+@rendermode InteractiveServer
+@inject IDataService data
+@inject NavigationManager navigate
+
+<PageTitle>Корзина товаров</PageTitle>
+<h1>Корзина товаров</h1>
+
+<div class="container">
+    @if (tasks == null)
+
+    {
+        <p>Загрузка...</p>
+    }
+
+    else
+
+    {
+        <div class="btn-group m-2">
+            <button class="btn btn-primary" @onclick="AddTask">Добавить товар</button>
+        </div>
+        <div class="card-group">
+            @foreach (var t in tasks)
+
+            {
+                <div class="card" style="background-color: @(t.IsAddedToCart ? "#d4edda" : "white");">
+                    <div class="card-header">
+                        Товар ID: @t.Id
+                    </div>
+                    <div class="card-body">
+                        <p>Категория: @t.Category</p>
+                        <p>Заказов: @t.Order</p>
+                    </div>
+                    <div class="card-footer">
+                        <a class="btn btn-info" @onclick="() => EditTask(t.Id)">Изменить</a>
+                        <button class="btn btn-primary" @onclick="() => ToggleCartStatus(t)">
+                            @(t.IsAddedToCart ? "Убрать из корзины" : "Добавить в корзину")
+                        </button>
+                        <button class="btn btn-danger" @onclick="() => DeleteTask(t.Id)">Удалить</button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    IEnumerable<TaskItem>? tasks; // Список объектов TaskItem
+
+
+
+    protected override async Task OnInitializedAsync()
+
+    {
+
+        tasks = await data.GetAllAsync();
+
+    }
+
+
+
+    void AddTask()
+
+    {
+
+        navigate.NavigateTo("tasks/add");
+
+    }
+
+
+
+    void EditTask(int id)
+
+    {
+
+        navigate.NavigateTo($"tasks/edit/{id}");
+
+    }
+
+
+
+    async Task DeleteTask(int id)
+
+    {
+
+        await data.DeleteAsync(id);
+
+        tasks = await data.GetAllAsync(); // Обновление списка
+
+    }
+
+
+
+    void ToggleCartStatus(TaskItem task)
+
+    {
+
+        task.IsAddedToCart = !task.IsAddedToCart;
+
+        StateHasChanged(); // Обновление интерфейса
+
+    }
+}
+
+
+
+@page "/"
+@rendermode InteractiveServer
+@inject IDataService data
+@inject NavigationManager navigate
+
+<PageTitle>Корзина товаров</PageTitle>
+<h1>Корзина товаров</h1>
+
+<div class="container">
+    <div class="input-group m-2">
+        <input type="text" class="form-control" placeholder="Поиск товаров..." @bind="searchQuery" />
+        <button class="btn btn-primary" @onclick="SearchTasks">Поиск</button>
+        <button class="btn btn-secondary" @onclick="ResetSearch">Сброс</button>
+    </div>
+
+    @if (tasks == null)
+
+    {
+        <p>Загрузка...</p>
+    }
+
+    else
+
+    {
+        <div class="btn-group m-2">
+            <button class="btn btn-primary" @onclick="AddTask">Добавить товар</button>
+        </div>
+        <div class="card-group">
+            @foreach (var t in filteredTasks)
+
+            {
+                <div class="card" style="background-color: @(t.IsAddedToCart ? "#d4edda" : "white");">
+                    <div class="card-header">
+                        Товар ID: @t.Id
+                    </div>
+                    <div class="card-body">
+                        <p>Категория: @t.Category</p>
+                        <p>Заказов: @t.Order</p>
+                    </div>
+                    <div class="card-footer">
+                        <a class="btn btn-info" @onclick="() => EditTask(t.Id)">Изменить</a>
+                        <button class="btn btn-primary" @onclick="() => ToggleCartStatus(t)">
+                            @(t.IsAddedToCart ? "Убрать из корзины" : "Добавить в корзину")
+                        </button>
+                        <button class="btn btn-danger" @onclick="() => DeleteTask(t.Id)">Удалить</button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    IEnumerable<TaskItem>? tasks; // Список всех объектов TaskItem
+
+    IEnumerable<TaskItem>? filteredTasks; // Отфильтрованные объекты для отображения
+
+    string searchQuery = ""; // Строка для хранения запроса поиска
+
+
+
+    protected override async Task OnInitializedAsync()
+
+    {
+
+        tasks = await data.GetAllAsync();
+
+        filteredTasks = tasks; // По умолчанию отображаем все задачи
+
+    }
+
+
+
+    void AddTask()
+
+    {
+
+        navigate.NavigateTo("tasks/add");
+
+    }
+
+
+
+    void EditTask(int id)
+
+    {
+
+        navigate.NavigateTo($"tasks/edit/{id}");
+
+    }
+
+
+
+    async Task DeleteTask(int id)
+
+    {
+
+        await data.DeleteAsync(id);
+
+        tasks = await data.GetAllAsync();
+
+        ApplySearchFilter(); // Обновление списка с учетом текущего фильтра
+
+    }
+
+
+
+    void ToggleCartStatus(TaskItem task)
+
+    {
+
+        task.IsAddedToCart = !task.IsAddedToCart;
+
+        StateHasChanged();
+
+    }
+
+
+
+    void SearchTasks()
+
+    {
+
+        ApplySearchFilter();
+
+    }
+
+
+
+    void ResetSearch()
+
+    {
+
+        searchQuery = "";
+
+        filteredTasks = tasks; // Сброс фильтра
+
+    }
+
+
+
+    void ApplySearchFilter()
+
+    {
+
+        if (string.IsNullOrWhiteSpace(searchQuery))
+
+        {
+
+            filteredTasks = tasks;
+
+        }
+
+        else
+
+        {
+
+            filteredTasks = tasks?.Where(t =>
+
+                t.Product.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+
+                t.Category.Contains(searchQuery, StringComparison.OrdinalIgnoreCase));
+
+        }
+
+    }
+}
+
+*@
+
+@page "/"
+@rendermode InteractiveServer
+@inject IDataService data
+@inject NavigationManager navigate
+
+<PageTitle>Корзина товаров</PageTitle>
+<h1>Корзина товаров</h1>
+
+<div class="container">
+    @if (tasks == null)
+
+    {
+        <p>Загрузка...</p>
+    }
+
+    else
+
+    {
+        <div class="btn-group m-2">
+            <button class="btn btn-primary" @onclick="AddTask">Добавить товар</button>
+        </div>
+        <div class="card-group">
+            @foreach (var t in tasks)
+
+            {
+                <div class="card" style="background-color: @(t.IsAddedToCart ? "white" : "white");">
+                    <div class="card-header">
+                        Товар ID: @t.Id
+                    </div>
+                    <div class="card-body">
+                        <p>Категория: @t.Category</p>
+                        <p>Заказов: @t.Order</p>
+                        <p>Цена: @t.Quantity</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-success" @onclick="() => IncrementQuantity(t)">+</button>
+                        <button class="btn btn-warning" @onclick="() => DecrementQuantity(t)" disabled="@(t.Quantity <= 0)">-</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteTask(t.Id)">Удалить</button>
                     </div>
                 </div>
             }
@@ -54,8 +422,6 @@
     protected override async Task OnInitializedAsync()
 
     {
-
-        await base.OnInitializedAsync();
 
         tasks = await data.GetAllAsync();
 
@@ -80,6 +446,36 @@
         await data.DeleteAsync(id);
 
         tasks = await data.GetAllAsync();
+
+    }
+
+
+
+    void IncrementQuantity(TaskItem task)
+
+    {
+
+        task.Quantity++;
+
+        StateHasChanged();
+
+    }
+
+
+
+    void DecrementQuantity(TaskItem task)
+
+    {
+
+        if (task.Quantity > 0)
+
+        {
+
+            task.Quantity--;
+
+            StateHasChanged();
+
+        }
 
     }
 }

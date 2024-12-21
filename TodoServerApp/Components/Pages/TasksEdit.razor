@@ -1,0 +1,75 @@
+﻿@page "/tasks/edit/{Id:int}"
+@inject IDataService data
+@inject NavigationManager navigate
+
+<PageTitle>Редактировать товар</PageTitle>
+<h1>Редактирование товара</h1>
+
+@if (TaskItem != null)
+
+{
+    <EditForm Model="TaskItem" OnValidSubmit="ValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label>Название товара</label>
+            <InputText @bind-Value="TaskItem.Product" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Категория</label>
+            <InputText @bind-Value="TaskItem.Category" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Количество заказов</label>
+            <InputNumber @bind-Value="TaskItem.Order" class="form-control" />
+        </div>
+
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+        <a class="btn btn-secondary" @onclick="Cancel">Отмена</a>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+
+    public int Id { get; set; }
+
+
+
+    TaskItem? TaskItem { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+
+    {
+
+        TaskItem = await data.GetTaskAsync(Id);
+
+    }
+
+
+
+    async Task ValidSubmit()
+
+    {
+
+        await data.SaveAsync(TaskItem!);
+
+        navigate.NavigateTo("/");
+
+    }
+
+
+
+    void Cancel()
+
+    {
+
+        navigate.NavigateTo("/");
+
+    }
+}

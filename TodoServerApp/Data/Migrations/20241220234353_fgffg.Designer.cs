@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoServerApp.Data;
 
@@ -11,9 +12,11 @@ using TodoServerApp.Data;
 namespace TodoServerApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241220234353_fgffg")]
+    partial class fgffg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,6 +235,10 @@ namespace TodoServerApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsAddedToCart")
                         .HasColumnType("bit");
 
@@ -242,9 +249,6 @@ namespace TodoServerApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("TaskItems");
@@ -254,37 +258,37 @@ namespace TodoServerApp.Migrations
                         {
                             Id = 1,
                             Category = "одежда",
+                            ImageUrl = "",
                             IsAddedToCart = false,
                             Order = "252 покупки",
-                            Product = "Футболка",
-                            Quantity = 0
+                            Product = "Футболка"
                         },
                         new
                         {
                             Id = 2,
                             Category = "одежда",
+                            ImageUrl = "",
                             IsAddedToCart = false,
                             Order = "1000 покупок",
-                            Product = "Джинсы",
-                            Quantity = 0
+                            Product = "Джинсы"
                         },
                         new
                         {
                             Id = 3,
                             Category = "верхняя одежда",
+                            ImageUrl = "",
                             IsAddedToCart = false,
                             Order = "2 покупки",
-                            Product = "Куртка",
-                            Quantity = 0
+                            Product = "Куртка"
                         },
                         new
                         {
                             Id = 4,
                             Category = "Описание задачи 4",
+                            ImageUrl = "",
                             IsAddedToCart = false,
                             Order = "2 покупки",
-                            Product = "Задача 4",
-                            Quantity = 0
+                            Product = "Задача 4"
                         });
                 });
 

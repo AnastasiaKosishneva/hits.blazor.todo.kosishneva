@@ -1,15 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿//обеспечивает структуру задачи
+
+using System.ComponentModel.DataAnnotations;
 
 namespace TodoServerApp.Data
 {
-	public class TaskItem
+	public class TaskItem //класс задачи
 	{
 		public int Id { get; set; }
 		[Required]
-		public string? Title { get; set; }
+		public string? Product { get; set; }
 		[Required]
-		public string? Description { get; set; }
-		public DateTime? CreatedDate { get; set; }
-		public DateTime? FinishDate { get; set; }
-	}
+		public string? Category { get; set; }
+
+        public string? Order { get; set; }
+        public bool IsAddedToCart { get; set; } = false; // Флаг для состояния корзины
+        public int Quantity { get; set; } = 0; // Количество товаров
+    }
 }
