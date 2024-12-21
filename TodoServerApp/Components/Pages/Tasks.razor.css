@@ -2,3 +2,26 @@
     margin: 0.5rem;
     min-width: 20rem;
 }
+/* Карточка по умолчанию */
+.item-card {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+    /* Подсветка при наведении */
+    .item-card.hovered {
+        background-color: #f0f8ff; /* Светло-голубой цвет */
+        transform: scale(1.02);
+    }
+
+    /* Цвет при выборе (нажатии) */
+    .item-card.selected {
+        background-color: #ffd700; /* Золотистый цвет */
+    }
+
+/* Эффект кнопок при клике */
+.click-effect:active {
+    transform: scale(0.95);
+    background-color: #d4edda;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}

@@ -15,5 +15,10 @@ namespace TodoServerApp.Data
         public string? Order { get; set; }
         public bool IsAddedToCart { get; set; } = false; // Флаг для состояния корзины
         public int Quantity { get; set; } = 0; // Количество товаров
+
+        public bool IsHovered { get; set; } // Новое поле
+
+        public bool IsSelected { get; set; } // Указывает, выбрана ли карточка
+ 
     }
 }

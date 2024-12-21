@@ -367,7 +367,7 @@
     }
 }
 
-*@
+
 
 @page "/"
 @rendermode InteractiveServer
@@ -406,7 +406,7 @@
                     <div class="card-footer">
                         <button class="btn btn-success" @onclick="() => IncrementQuantity(t)">+</button>
                         <button class="btn btn-warning" @onclick="() => DecrementQuantity(t)" disabled="@(t.Quantity <= 0)">-</button>
-                        <button class="btn btn-danger" @onclick="() => DeleteTask(t.Id)">Удалить</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteTask(t.Id)">Удаfлить</button>
                     </div>
                 </div>
             }
@@ -476,6 +476,230 @@
             StateHasChanged();
 
         }
+
+    }
+}
+
+
+*@
+@page "/"
+@rendermode InteractiveServer
+@inject IDataService data
+@inject NavigationManager navigate
+
+<PageTitle>Корзина товаров</PageTitle>
+<h1 class="page-title">Корзина товаров</h1>
+
+<div class="container">
+    @if (tasks == null)
+
+    {
+        <p>Загрузка...</p>
+    }
+
+    else
+
+    {
+        <div class="input-group m-2">
+            <input type="text" class="form-control" placeholder="Поиск товара..." @bind="searchQuery" />
+            <button class="btn btn-primary" @onclick="SearchTasks">Найти</button>
+            <button class="btn btn-secondary" @onclick="ResetSearch">Сбросить</button>
+        </div>
+        <div class="btn-group m-2">
+            <button class="btn btn-primary" @onclick="AddTask">Добавить товар</button>
+        </div>
+        <div class="card-group">
+            @foreach (var t in filteredTasks)
+
+            {
+                <div class="card @(t.IsSelected ? "selected-card" : "")"
+                     @onmouseenter="() => ToggleHoverState(t, true)"
+                     @onmouseleave="() => ToggleHoverState(t, false)"
+                     @onclick="() => ToggleSelectState(t)">
+                    <div class="card-header">
+                        <span class="card-id"><p>Товар: @t.Product</p></span>
+                    </div>
+                    <div class="card-body">
+                        <p>Категория: @t.Category</p>
+                        <p>Цена: @t.Order руб.</p>
+                        <p>Добавлено: @t.Quantity</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-success" @onclick:stopPropagation="true" @onclick="() => IncrementQuantity(t)">+</button>
+                        <button class="btn btn-warning" @onclick:stopPropagation="true" @onclick="() => DecrementQuantity(t)" disabled="@(t.Quantity <= 0)">-</button>
+                        <button class="btn btn-danger" @onclick:stopPropagation="true" @onclick="() => DeleteTask(t.Id)">Удалить</button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .page-title {
+        text-align: center; /* Центровка текста */
+        font-size: 2.5rem; /* Увеличение размера шрифта */
+        margin: 20px 0; /* Отступы сверху и снизу */
+        font-weight: bold; /* Жирный текст */
+        color: #2c3e50; /* Цвет текста */
+    }
+
+    .card-id {
+        text-align: center; /* Центровка текста */
+        font-size: 1.2rem; /* Увеличение шрифта ID */
+        font-weight: bold; /* Жирный текст для ID */
+        color: #34495e; /* Темно-синий цвет */
+    }
+
+    .card:hover {
+        background-color: #f0f8ff; /* Цвет при наведении */
+    }
+
+    .selected-card {
+        background-color: #add8e6; /* Цвет при выборе */
+    }
+</style>
+
+@code {
+    IEnumerable<TaskItem>? tasks; // Все товары
+
+    List<TaskItem> filteredTasks = new(); // Отфильтрованные товары для поиска
+
+    string searchQuery = string.Empty; // Строка поиска
+
+
+
+    protected override async Task OnInitializedAsync()
+
+    {
+
+        tasks = await data.GetAllAsync();
+
+        filteredTasks = tasks.ToList(); // Начальная инициализация
+
+    }
+
+
+
+    void AddTask()
+
+    {
+
+        navigate.NavigateTo("tasks/add");
+
+    }
+
+
+
+    async Task DeleteTask(int id)
+
+    {
+
+        await data.DeleteAsync(id);
+
+        tasks = await data.GetAllAsync();
+
+        SearchTasks(); // Обновляем список после удаления
+
+    }
+
+
+
+    void IncrementQuantity(TaskItem task)
+
+    {
+
+        task.Quantity++;
+
+        StateHasChanged();
+
+    }
+
+
+
+    void DecrementQuantity(TaskItem task)
+
+    {
+
+        if (task.Quantity > 0)
+
+        {
+
+            task.Quantity--;
+
+            StateHasChanged();
+
+        }
+
+    }
+
+
+
+    void SearchTasks()
+
+    {
+
+        if (string.IsNullOrWhiteSpace(searchQuery))
+
+        {
+
+            filteredTasks = tasks?.ToList() ?? new List<TaskItem>();
+
+        }
+
+        else
+
+        {
+
+            filteredTasks = tasks?.Where(t =>
+
+                t.Product.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || // Поиск по названию товара
+
+                t.Category.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || // Поиск по категории
+
+                t.Order.ToString().Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || // Поиск по количеству заказов
+
+                t.Quantity.ToString().Contains(searchQuery, StringComparison.OrdinalIgnoreCase) // Поиск по количеству
+
+            ).ToList() ?? new List<TaskItem>();
+
+        }
+
+    }
+
+
+
+    void ResetSearch()
+
+    {
+
+        searchQuery = string.Empty; // Сбрасываем строку поиска
+
+        filteredTasks = tasks?.ToList() ?? new List<TaskItem>(); // Возвращаемся к начальному списку
+
+    }
+
+
+
+    void ToggleSelectState(TaskItem task)
+
+    {
+
+        task.IsSelected = !task.IsSelected;
+
+        StateHasChanged();
+
+    }
+
+
+
+    void ToggleHoverState(TaskItem task, bool isHovered)
+
+    {
+
+        task.IsHovered = isHovered;
+
+        StateHasChanged();
 
     }
 }

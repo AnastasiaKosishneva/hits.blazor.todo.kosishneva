@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoServerApp.Data;
 
@@ -11,9 +12,11 @@ using TodoServerApp.Data;
 namespace TodoServerApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241221061437_lll")]
+    partial class lll
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,9 +241,6 @@ namespace TodoServerApp.Migrations
                     b.Property<bool>("IsHovered")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsSelected")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Order")
                         .HasColumnType("nvarchar(max)");
 
@@ -262,7 +262,6 @@ namespace TodoServerApp.Migrations
                             Category = "одежда",
                             IsAddedToCart = false,
                             IsHovered = false,
-                            IsSelected = false,
                             Order = "252 покупки",
                             Product = "Футболка",
                             Quantity = 0
@@ -273,7 +272,6 @@ namespace TodoServerApp.Migrations
                             Category = "одежда",
                             IsAddedToCart = false,
                             IsHovered = false,
-                            IsSelected = false,
                             Order = "1000 покупок",
                             Product = "Джинсы",
                             Quantity = 0
@@ -284,7 +282,6 @@ namespace TodoServerApp.Migrations
                             Category = "верхняя одежда",
                             IsAddedToCart = false,
                             IsHovered = false,
-                            IsSelected = false,
                             Order = "2 покупки",
                             Product = "Куртка",
                             Quantity = 0
@@ -295,7 +292,6 @@ namespace TodoServerApp.Migrations
                             Category = "Описание задачи 4",
                             IsAddedToCart = false,
                             IsHovered = false,
-                            IsSelected = false,
                             Order = "2 покупки",
                             Product = "Задача 4",
                             Quantity = 0
